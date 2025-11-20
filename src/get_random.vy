@@ -1,0 +1,63 @@
+# pragma version 0.4.3
+"""
+@license MIT 
+@title A contract acting as a module to get chainlink random with payment
+@author Ee Xuan En Arvin
+@notice This contract is a module to support the lottery random from chainlink
+"""
+
+from interface import VRFCoordinatorV2plus
+
+#-----------------------------------------------------
+#                       Variables
+#-----------------------------------------------------
+MAX_ARRAY_SIZE: constant(uint256) = 10
+CALLBACK_GAS_LIMIT: constant(uint32) = 25 * (10 ** 5)
+NUMWORDS: constant(uint32) = 1
+CONRIMATIONS: constant(uint32) = 3
+
+s_requests: HashMap[uint256, RequestStatus]
+
+#-----------------------------------------------------
+#                       Declarations
+#-----------------------------------------------------
+struct RequestStatus:
+    paid: uint256 # amount paid in wei
+    fulfilled: bool # whether the request has been successfully fulfilled
+    randomWords: DynArray[uint256, MAX_ARRAY_SIZE]
+
+#-----------------------------------------------------
+#                       Events
+#-----------------------------------------------------
+event RequestFulfilled:
+    requestId: indexed(uint256)
+    randomWords: DynArray[uint256, MAX_ARRAY_SIZE]
+    payment: uint256
+
+
+event RandomWordsRequested:
+    keyHash: indexed(bytes32)
+    requestId: uint256
+    preSeed: uint256
+    subId: indexed(uint64)
+    minimumRequestConfirmations: uint16
+    callbackGasLimit: uint32
+    numWords: uint32
+    sender: indexed(address)
+
+
+
+@internal
+@view
+def get_price_per_call(vrf: VRFCoordinatorV2plus) -> uint256:
+    return staticcall vrf.calculateRequestPriceNative(CALLBACK_GAS_LIMIT, NUMWORDS)
+
+@internal
+def requestRandom(vrf: VRFCoordinatorV2plus):
+    """
+    Module mainly uses pay per use instead of subscription
+    hence, subscription function will be ignored and 
+    not implemented
+    """
+    pass
+

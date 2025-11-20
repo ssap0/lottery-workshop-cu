@@ -1,0 +1,38 @@
+# SPDX-License-Identifier: MIT
+# @version 0.4.3
+# https://github.com/smartcontractkit/chainlink/blob/contracts-v1.3.0/contracts/src/v0.8/vrf/dev/interfaces/IVRFV2PlusWrapper.sol
+
+@external
+@view
+def lastRequestId() -> uint256:
+    ...
+
+@external
+@view
+def calculateRequestPrice(_callbackGasLimit: uint32, _numWords:uint32) -> uint256:
+    ...
+
+@external
+@view
+def calculateRequestPriceNative(_callbackGasLimit: uint32, _numWords:uint32) -> uint256:
+    ...
+
+@external
+@payable
+def requestRandomWordsInNative(
+    _callbackGasLimit: uint32 ,
+    _requestConfirmations: uint16 ,
+    _numWords: uint32 ,
+   extraArgs: Bytes[1024]
+  )  -> uint256:
+  ...
+
+@external
+@view
+def link()-> address:
+    ...
+
+@external
+@view
+def linkNativeFeed() -> address:
+    ...
