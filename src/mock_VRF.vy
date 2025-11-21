@@ -1,0 +1,75 @@
+# pragma version 0.4.3
+"""
+@license MIT 
+@title A contract to mock a chainlink VRF 
+@author Ee Xuan En Arvin
+@notice Mock chainlink vrf with needed function
+"""
+
+from interface import VRFCoordinatorV2plus
+
+implements: VRFCoordinatorV2plus
+
+#-----------------------------------------------------
+#                       State
+#-----------------------------------------------------
+
+MAX_ARRAY_SIZE: constant(uint256) = 10
+PRICE: constant(uint256) = 100 # random cost 
+vrf_address: immutable(address)
+last_id: uint256
+
+#-----------------------------------------------------
+#                       Functions
+#-----------------------------------------------------
+
+@deploy
+def __init__(add: address):
+    vrf_address = add
+    self.last_id = 0
+
+@external
+@view
+def lastRequestId() -> uint256:
+    return self.last_id
+
+@external
+@view
+def calculateRequestPrice(_callbackGasLimit: uint32, _numWords:uint32) -> uint256:
+    return PRICE
+
+@external
+@view
+def calculateRequestPriceNative(_callbackGasLimit: uint32, _numWords:uint32) -> uint256:
+    return PRICE
+
+@external
+@payable
+def requestRandomWordsInNative(
+    _callbackGasLimit: uint32 ,
+    _requestConfirmations: uint16 ,
+    _numWords: uint32 ,
+   extraArgs: Bytes[1024]
+  )  -> uint256:
+
+  self.last_id += 1
+
+  # call the function
+  words: DynArray[uint256, MAX_ARRAY_SIZE] = [77]
+  call_data: Bytes[3236] = abi_encode(
+        self.last_id,
+        words,
+        method_id=method_id("rawFulfillRandomWords(uint256,uint256[])"),
+    )
+
+  return self.last_id
+
+@external
+@view
+def link()-> address:
+    return vrf_address
+
+@external
+@view
+def linkNativeFeed() -> address:
+    return vrf_address
