@@ -1,9 +1,12 @@
 import pytest
 from script.deploy import deploy
+from script.deploy_mock import deploy_mock
 
-#TEMP sepolia coordinator address
-
+@pytest.fixture(scope="session")
+def mock_vrf():
+    return deploy_mock()
 
 @pytest.fixture(scope="function")
-def lottery():
-    return deploy()
+def lottery(mock_vrf):
+    return deploy(mock_vrf)
+

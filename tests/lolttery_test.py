@@ -1,5 +1,14 @@
 import boa
 from eth_utils import to_wei
+from os.path import join, dirname
+import os
+from dotenv import load_dotenv
+
+dotenv_path = join(dirname(__file__), '.env')
+load_dotenv(dotenv_path)
+
+VRF_COORDINATOR = os.getenv("VRF_Coordinator")
+
 
 USERS = [boa.env.generate_address("user") for i in range(10)]
 INITIAL_VALUE = to_wei(2, "ether")

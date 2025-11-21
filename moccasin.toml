@@ -3,6 +3,9 @@ src = "src"
 out = "out"
 dot_env = ".env"
 
+[networks.contracts.vrf_coordinator]
+deployer_script = "deploy_mock.py"
+
 [networks.pyevm]
 is_zksync = false
 
@@ -13,8 +16,15 @@ save_to_db = false
 chain_id = 31337
 
 [networks.sepolia]
-url = "https://ethereum-sepolia-rpc.publicnode.com"
+url = "$Sepolia_RPC"
 chain_id = 11155111
+save_to_db = false
+default_account_name="default"
+explorer_uri ="https://eth-sepolia.blockscout.com/"
+explorer_type = "blockscout"
+
+[networks.sepolia.contracts.vrf_coordinator]
+address = "$VRF_Coordinator"
 
 [networks.zksync-sepolia]
 url = "https://sepolia.era.zksync.dev"

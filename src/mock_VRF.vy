@@ -16,7 +16,6 @@ implements: VRFCoordinatorV2plus
 
 MAX_ARRAY_SIZE: constant(uint256) = 10
 PRICE: constant(uint256) = 100 # random cost 
-vrf_address: immutable(address)
 last_id: uint256
 
 #-----------------------------------------------------
@@ -24,8 +23,7 @@ last_id: uint256
 #-----------------------------------------------------
 
 @deploy
-def __init__(add: address):
-    vrf_address = add
+def __init__():
     self.last_id = 0
 
 @external
@@ -67,9 +65,9 @@ def requestRandomWordsInNative(
 @external
 @view
 def link()-> address:
-    return vrf_address
+    return self
 
 @external
 @view
 def linkNativeFeed() -> address:
-    return vrf_address
+    return self
