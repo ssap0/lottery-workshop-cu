@@ -14,7 +14,8 @@ from interface import VRFCoordinatorV2plus
 MAX_ARRAY_SIZE: constant(uint256) = 10
 CALLBACK_GAS_LIMIT: constant(uint32) = 25 * (10 ** 5)
 NUMWORDS: constant(uint32) = 1
-CONRIMATIONS: constant(uint32) = 3
+CONRIMATIONS: constant(uint16) = 3
+EXTRA_ARGS: constant(Bytes[32]) = b"\x01"
 
 s_requests: HashMap[uint256, RequestStatus]
 
@@ -36,21 +37,14 @@ event RequestFulfilled:
 
 
 event RandomWordsRequested:
-    keyHash: indexed(bytes32)
     requestId: uint256
-    preSeed: uint256
-    subId: indexed(uint64)
-    minimumRequestConfirmations: uint16
     callbackGasLimit: uint32
     numWords: uint32
-    sender: indexed(address)
-
-
 
 @internal
-@view
-def get_price_per_call(vrf: VRFCoordinatorV2plus) -> uint256:
-    return staticcall vrf.calculateRequestPriceNative(CALLBACK_GAS_LIMIT, NUMWORDS)
+def address(vrf: VRFCoordinatorV2plus) -> address:
+    return staticcall vrf.link()
+
 
 @internal
 def requestRandom(vrf: VRFCoordinatorV2plus):
@@ -59,5 +53,9 @@ def requestRandom(vrf: VRFCoordinatorV2plus):
     hence, subscription function will be ignored and 
     not implemented
     """
-    pass
+    price_for_call: uint256 = staticcall vrf.calculateRequestPriceNative(CALLBACK_GAS_LIMIT, NUMWORDS)
+    request_id:uint256 = extcall vrf.requestRandomWordsInNative(CALLBACK_GAS_LIMIT,
+    CONRIMATIONS, NUMWORDS, EXTRA_ARGS, value=price_for_call)
 
+    log RandomWordsRequested(requestId=request_id, callbackGasLimit=CALLBACK_GAS_LIMIT,
+    numWords= NUMWORDS)
