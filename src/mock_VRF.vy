@@ -6,9 +6,9 @@
 @notice Mock chainlink vrf with needed function
 """
 
-from interface import VRFCoordinatorV2plus
+from interface import VRFWrapperV2plus
 
-implements: VRFCoordinatorV2plus
+implements: VRFWrapperV2plus
 
 #-----------------------------------------------------
 #                       State
@@ -57,9 +57,10 @@ def requestRandomWordsInNative(
   call_data: Bytes[3236] = abi_encode(
         self.last_id,
         words,
-        method_id=method_id("rawFulfillRandomWords(uint256,uint256[])"),
+        method_id=method_id("fulfillRandomWords(uint256,uint256[])"),
     )
 
+  response: Bytes[32] = raw_call(msg.sender, call_data, max_outsize=32)
   return self.last_id
 
 @external

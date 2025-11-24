@@ -59,13 +59,14 @@ def test_draw_lottery(lottery):
 
     lottery.pick_winner()
 
-    # assert winner and the value of the contract
-    assert boa.env.get_balance(lottery.last_winner) >= 0
-    assert boa.env.get_balance(lottery) == 0
+    # print results
+    #logs = lottery.get_logs()
+    #last_log = logs[len(logs) - 1]
 
-    # print the values of the lottry
-    logs = lottery.get_logs()
-    last_log = logs[logs.count() - 1]
-    print(f"Winner is {lottery.last_winner} with money of {boa.env.get_balance(lottery.last_winner)}")
-    print(f"Lottery random cost: {last_log.payment}")
+    print(f"Winner is {lottery.last_winner()} with money of {boa.env.get_balance(lottery.last_winner())}")
+    # print(f"Lottery random cost: {last_log.payment}")
+
+    # assert winner and the value of the contract
+    assert boa.env.get_balance(lottery.last_winner()) > 0, "The winner has no money"
+    assert boa.env.get_balance(lottery.address) == 0, f"Balance of contract is {boa.env.get_balance(lottery.address)}"
    

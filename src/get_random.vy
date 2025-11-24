@@ -7,6 +7,7 @@
 """
 
 from interface import VRFCoordinatorV2plus
+from interface import VRFWrapperV2plus
 
 #-----------------------------------------------------
 #                       Variables
@@ -42,19 +43,19 @@ event RandomWordsRequested:
     numWords: uint32
 
 @internal
-def address(vrf: VRFCoordinatorV2plus) -> address:
-    return staticcall vrf.link()
+def address(wrapper: VRFWrapperV2plus) -> address:
+    return staticcall wrapper.link()
 
 
 @internal
-def requestRandom(vrf: VRFCoordinatorV2plus):
+def requestRandom(vrf: VRFCoordinatorV2plus, wrapper: VRFWrapperV2plus):
     """
     Module mainly uses pay per use instead of subscription
     hence, subscription function will be ignored and 
     not implemented
     """
-    price_for_call: uint256 = staticcall vrf.calculateRequestPriceNative(CALLBACK_GAS_LIMIT, NUMWORDS)
-    request_id:uint256 = extcall vrf.requestRandomWordsInNative(CALLBACK_GAS_LIMIT,
+    price_for_call: uint256 = staticcall wrapper.calculateRequestPriceNative(CALLBACK_GAS_LIMIT, NUMWORDS)
+    request_id:uint256 = extcall wrapper.requestRandomWordsInNative(CALLBACK_GAS_LIMIT,
     CONRIMATIONS, NUMWORDS, EXTRA_ARGS, value=price_for_call)
 
     log RandomWordsRequested(requestId=request_id, callbackGasLimit=CALLBACK_GAS_LIMIT,

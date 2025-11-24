@@ -6,6 +6,9 @@ dot_env = ".env"
 [networks.contracts.vrf_coordinator]
 deployer_script = "deploy_mock.py"
 
+[networks.contracts.vrf_wrapper]
+deployer_script = "deploy_mock.py"
+
 [networks.pyevm]
 is_zksync = false
 
@@ -24,7 +27,7 @@ explorer_uri ="https://eth-sepolia.blockscout.com/"
 explorer_type = "blockscout"
 
 [networks.sepolia.contracts.vrf_coordinator]
-address = "$VRF_Coordinator"
+address = "$VRF_Wrapper"
 
 [networks.zksync-sepolia]
 url = "https://sepolia.era.zksync.dev"

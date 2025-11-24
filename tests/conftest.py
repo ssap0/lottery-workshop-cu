@@ -7,6 +7,6 @@ def mock_vrf():
     return deploy_mock()
 
 @pytest.fixture(scope="function")
-def lottery(mock_vrf):
-    return deploy(mock_vrf)
+def lottery():
+    return deploy()
 
