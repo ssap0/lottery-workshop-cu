@@ -1,5 +1,5 @@
 cd ../
-wsl bash -lc "mox test"
+wsl bash -lc "mox test --network sepolia --fork"
 
-wsl bash -lc "mox test --coverage"
+wsl bash -lc "mox test --network sepolia --fork --coverage"
 pause
